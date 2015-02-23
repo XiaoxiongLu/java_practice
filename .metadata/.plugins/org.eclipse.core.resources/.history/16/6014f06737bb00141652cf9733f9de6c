@@ -1,0 +1,48 @@
+package leetcode;
+
+public class MedianTwoSortedArray {
+    public static double findMedianSortedArrays(int A[], int B[]) {
+        int m = A.length;
+        int n = B.length;
+        if ((m + n) % 2 == 0) {
+            return (findKth(A, B, 0, 0, (m + n)/2) + findKth(A, B, 0, 0, (m + n)/2 + 1)) / 2.0;
+        } else {
+            return findKth(A, B, 0, 0, (m + n)/2 + 1);
+        }
+    }
+    
+    public static double findKth(int A[], int B[], int start_A, int start_B, int k) {
+        int end_A = A.length;
+        int end_B = B.length;
+        if (start_A >= end_A) return B[start_B + k - 1];
+        if (start_B >= end_B) return A[start_A + k - 1];
+        if (k == 1) return Math.min(A[start_A], B[start_B]);
+        int shift_A = 0;
+        int shift_B = 0;
+        if (end_A - start_A <= k/2) {
+            shift_A = end_A - start_A;
+            shift_B = k - shift_A;
+        } else if (end_B - start_B <= k/2) {
+            shift_B = end_B - start_B;
+            shift_A = k - shift_B;
+        } else {
+            shift_A = k/2;
+            shift_B = k - shift_A;
+        }
+        if (A[start_A + shift_A - 1] < B[start_B + shift_B - 1]) {
+            return findKth(A, B, start_A + shift_A, start_B, k - shift_A);
+        } else if (A[start_A + shift_A - 1] > B[start_B + shift_B - 1]) {
+            return findKth(A, B, start_A, start_B + shift_B, k - shift_B);
+        } else {
+            return A[start_A + shift_A - 1];
+        }
+    }
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		int[] A = {1, 2};
+		int[] B = {1, 2};
+		System.out.println(findMedianSortedArrays(A, B));
+	}
+
+}
